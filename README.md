@@ -1,4 +1,4 @@
-# Security MVP — FIAP Challenge Fase 3
+# Security MVP
 
 Dois agentes de segurança para auxiliar desenvolvedores júnior a identificar vulnerabilidades em código e infraestrutura cloud antes de chegarem à produção.
 
