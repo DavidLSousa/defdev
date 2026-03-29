@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Vulnerable CloudFormation stack for security testing
+
+Resources:
+  # VULNERABILITY: Public S3 bucket
+  PublicDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-public-data-bucket
+      AccessControl: PublicRead
+
+  # VULNERABILITY: No encryption, no versioning
+  LogsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: company-logs-unencrypted
+
+  # VULNERABILITY: Security group open to world
+  WebServerSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Web server security group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3389
+          ToPort: 3389
+          CidrIp: 0.0.0.0/0
+
+  # VULNERABILITY: Wildcard IAM policy
+  AdminPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: FullAdminPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action: '*'
+            Resource: '*'

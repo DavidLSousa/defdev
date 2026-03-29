@@ -1,0 +1,45 @@
+name: 'Security MVP Scanner'
+description: 'Run DevSecOps and CSPM security analysis on your codebase and IaC'
+author: 'FIAP MVP Challenge'
+
+inputs:
+  scan-type:
+    description: 'Which scan to run: devsecops, cspm, or both'
+    required: false
+    default: 'both'
+  path:
+    description: 'Directory to scan (defaults to repository root)'
+    required: false
+    default: '.'
+  severity-threshold:
+    description: 'Minimum severity to report: critical, high, medium, low, info'
+    required: false
+    default: 'info'
+  fail-on-severity:
+    description: 'Fail the action if findings at this severity or above are found'
+    required: false
+    default: 'high'
+  upload-sarif:
+    description: 'Upload SARIF results to GitHub Code Scanning (requires write permissions)'
+    required: false
+    default: 'false'
+  github-token:
+    description: 'GitHub token for uploading SARIF results'
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  total-findings:
+    description: 'Total number of security findings (DevSecOps)'
+  compliance-score:
+    description: 'Compliance score percentage (CSPM)'
+  has-critical:
+    description: 'Whether any critical findings were found'
+
+runs:
+  using: 'node20'
+  main: 'action-dist/index.js'
+
+branding:
+  icon: 'shield'
+  color: 'red'

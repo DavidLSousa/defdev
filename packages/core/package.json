@@ -1,0 +1,22 @@
+{
+  "name": "@defdev/core",
+  "version": "1.0.0",
+  "description": "Shared types, interfaces and utilities for defdev security agents",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "build": "tsc --build",
+    "test": "vitest run",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.2"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}

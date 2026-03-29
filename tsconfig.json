@@ -1,0 +1,10 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/devsecops-agent" },
+    { "path": "./packages/cspm-agent" },
+    { "path": "./packages/cli" },
+    { "path": "./packages/github-action" }
+  ]
+}

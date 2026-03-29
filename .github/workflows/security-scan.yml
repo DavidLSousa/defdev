@@ -1,0 +1,68 @@
+name: Security Scan (Example Usage)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  devsecops:
+    name: DevSecOps — Code Security
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run DevSecOps Agent
+        run: |
+          node packages/cli/dist/bin/security-mvp.js scan ./src \
+            --format sarif \
+            --output devsecops.sarif \
+            --fail-on high
+        continue-on-error: true
+
+      - name: Upload SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: devsecops.sarif
+        continue-on-error: true
+
+  cspm:
+    name: CSPM — Cloud Posture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run CSPM Agent
+        run: |
+          node packages/cli/dist/bin/security-mvp.js cspm ./infrastructure \
+            --format json \
+            --output cspm-report.json \
+            --fail-on high
+        continue-on-error: true
+
+      - name: Upload compliance report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cspm-report
+          path: cspm-report.json
